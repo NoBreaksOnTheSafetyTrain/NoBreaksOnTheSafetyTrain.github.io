@@ -29,12 +29,10 @@
 					    var infowindow = new google.maps.InfoWindow({
 					        map: map,
 					        position: pos,
-					        content: 'Location found using HTML5.'
+					        content: 'Here you are.'
 					    });
 					    var myLat = pos.lat();
 					    var myLng = pos.lng();
-					    window.alert(myLat);
-					    window.alert(myLng);
 					    map.setCenter(pos);
 					    var rectangle = new google.maps.Rectangle({
 							strokeColor: '#FF0000',
@@ -44,8 +42,8 @@
 							fillOpacity: 0.35,
 							map: map,
 							bounds: new google.maps.LatLngBounds(
-								new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-								new google.maps.LatLng(position.coords.latitude+.01, position.coords.longitude+.01))
+								new google.maps.LatLng(myLat, myLng),
+								new google.maps.LatLng(myLat+.01, myLng+.01))
 					    }) 
 					}, function() {
 					    	handleNoGeolocation(true);
