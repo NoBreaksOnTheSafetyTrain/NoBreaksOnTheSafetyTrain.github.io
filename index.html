@@ -43,7 +43,7 @@
     					bounds: new google.maps.LatLngBounds(
     						new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
     						new google.maps.LatLng(position.coords.latitude+.01, position.coords.longitutude-.01))
-				    }), function() {
+				    }) }, function() {
 				    	handleNoGeolocation(true);
 				    });
 				} else {
