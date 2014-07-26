@@ -365,3 +365,9 @@ body {
 #redzone {
    color:red;
 }
+
+#tiny
+{
+font-size:xx-small;
+color:DimGray;
+}
