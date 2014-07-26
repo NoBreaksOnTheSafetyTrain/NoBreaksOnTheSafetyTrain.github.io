@@ -23,28 +23,29 @@
 				// Try HTML5 geolocation
 				if(navigator.geolocation) {
 				    navigator.geolocation.getCurrentPosition(function(position) {
-				    var pos = new google.maps.LatLng(position.coords.latitude,
-				    	position.coords.longitude);
+					    var pos = new google.maps.LatLng(position.coords.latitude,
+					    	position.coords.longitude);
 
-				    var infowindow = new google.maps.InfoWindow({
-				        map: map,
-				        position: pos,
-				        content: 'Location found using HTML5.'
-				    });
+					    var infowindow = new google.maps.InfoWindow({
+					        map: map,
+					        position: pos,
+					        content: 'Location found using HTML5.'
+					    });
 
-				    map.setCenter(pos);
-				    var rectangle = new google.maps.Rectangle({
-    					strokeColor: '#FF0000',
-    					strokeOpacity: 0.8,
-    					strokeWeight: 2,
-    					fillColor: '#FF0000',
-    					fillOpacity: 0.35,
-    					map: map,
-    					bounds: new google.maps.LatLngBounds(
-    						new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-    						new google.maps.LatLng(position.coords.latitude+.01, position.coords.longitutude-.01))
-				    }) }, function() {
-				    	handleNoGeolocation(true);
+					    map.setCenter(pos);
+					    var rectangle = new google.maps.Rectangle({
+							strokeColor: '#FF0000',
+							strokeOpacity: 0.8,
+							strokeWeight: 2,
+							fillColor: '#FF0000',
+							fillOpacity: 0.35,
+							map: map,
+							bounds: new google.maps.LatLngBounds(
+								new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+								new google.maps.LatLng(position.coords.latitude+.1, position.coords.longitutude-.1))
+					    }) 
+					}, function() {
+					    	handleNoGeolocation(true);
 				    });
 				} else {
 				    // Browser doesn't support Geolocation
