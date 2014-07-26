@@ -42,6 +42,7 @@
 							fillOpacity: 0.35,
 							map: map,
 							editable: true,
+							draggable: true,
 							bounds: new google.maps.LatLngBounds(
 								new google.maps.LatLng(myLat, myLng),
 								new google.maps.LatLng(myLat+.01, myLng+.01))
@@ -76,6 +77,20 @@
 		</div>
 	</head>
 	<body>
-    	<div id="map-canvas"/>
+		<table width="100%" height="100%">
+			<tr height="100%">
+				<td width="50%">
+					<div id="map-canvas"/>
+				</td>
+				<td width = "50%">
+					<div>
+						<form>
+							User ID: <input type="text" name="user_id"><br>
+							RedZone Name: <input type="text" name="redzone_name"><br>
+						</form>
+					</div>
+				</td>
+			</tr>
+		</table>
   	</body>
 </html>
