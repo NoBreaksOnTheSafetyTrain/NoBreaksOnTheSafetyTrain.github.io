@@ -31,7 +31,7 @@
 					        position: pos,
 					        content: 'Location found using HTML5.'
 					    });
-
+					    window.alert(pos);
 					    map.setCenter(pos);
 					    var rectangle = new google.maps.Rectangle({
 							strokeColor: '#FF0000',
@@ -42,7 +42,7 @@
 							map: map,
 							bounds: new google.maps.LatLngBounds(
 								new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-								new google.maps.LatLng(position.coords.latitude+.1, position.coords.longitude+1))
+								new google.maps.LatLng(position.coords.latitude+.01, position.coords.longitude+.01))
 					    }) 
 					}, function() {
 					    	handleNoGeolocation(true);
