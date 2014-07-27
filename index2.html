@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+        <link rel="shortcut icon" href="\img\UPgrayscale-favicon.ico">
 		<div>
    		 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
    		 <style type="text/css">
@@ -11,11 +12,40 @@
    		 <script type="text/javascript"
      		 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnpJr_aysMrCbFnyjiLBHLE1bICfjr3KM">
     		</script>
+			<!-- This stuff is here to make Parse work -->
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+			<script>
+			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
+			</script>
+			<!-- End Parse stuff -->
    		 <script type="text/javascript">
    		 	var rectangle;
    		 	var map;
    		 	var infoWindow;
-    		function initialize() {
+   		 	var RZ_SW_LAT;
+   		 	var RZ_SW_LNG;
+   		 	var RZ_NE_LAT;
+   		 	var RZ_NE_LNG;
+            var red_zone_num;
+
+            var RedZoneNum = Parse.Object.extend("RedZoneNum");
+            var query = new Parse.Query(RedZoneNum);
+            query.equalTo("name", "indice");
+            query.find({
+                success: function(results) {
+                    for (var i = 0; i < results.length; i++) {
+                        var object = results[i];
+                        red_zone_num = object.get('index');
+                        alert("Red Zone num is " + red_zone_num);
+                    }
+                },
+                error: function(error) {
+                    alert("Error: " + error.code + " " + error.message);
+                }
+            });
+
+            function initialize() {
 				var mapOptions = {
    					zoom: 16
   				};
@@ -37,6 +67,14 @@
 					    var myLng = pos.lng();
 					    map.setCenter(pos);
 
+					    // Define offsets.
+					    var Lat_Off = .000078125;
+					    var Lng_Off = .00125;
+					    RZ_SW_LAT = myLat-Lat_Off;
+					    RZ_SW_LNG = myLng-Lng_Off;
+					    RZ_NE_LAT = myLat+Lat_Off;
+					    RZ_NE_LNG = myLng+Lng_Off;
+
 					    rectangle = new google.maps.Rectangle({
 							strokeColor: '#FF0000',
 							strokeOpacity: 0.8,
@@ -47,9 +85,55 @@
 							editable: true,
 							draggable: true,
 							bounds: new google.maps.LatLngBounds(
-								new google.maps.LatLng(myLat-.000078125, myLng-.00125),
-								new google.maps.LatLng(myLat+.000078125, myLng+.00125))
+								new google.maps.LatLng(RZ_SW_LAT, RZ_SW_LNG),
+								new google.maps.LatLng(RZ_NE_LAT, RZ_NE_LNG))
 					    })
+
+                        var NEquery = new Parse.Query(UpperRight);
+                        var SWquery = new Parse.Query(LowerLeft);
+                        var NEpoint;
+                        var SWpoint;
+                        for(var i=0; i<RedZoneNum; i++)
+                        {
+                            NEquery.equalTo("name", i);
+                            NEquery.find({
+                                success: function(results) {
+                                    for(var j = 0; j <results.length; j++) {
+                                        NEpoint = results[i];
+                                    }
+                                },
+                                error: function(error) {
+                                    alert("Error: " + error.code + " " + error.message);
+                                }
+                            });
+                            SWquery.equalTo("name", i);
+                            SWquery.find({
+                                success: function(results) {
+                                    for(var j = 0; j <results.length; j++) {
+                                        SWpoint = results[i];
+                                    }
+                                },
+                                error: function(error) {
+                                    alert("Error: " + error.code + " " + error.message);
+                                }
+                            });
+                            if(SWpoint!=null && NEpoint!=null) {
+                                var zone = new google.maps.Rectangle({
+                                    strokeColor: '#FF0000',
+                                    strokeOpacity: 0.8,
+                                    strokeWeight: 2,
+                                    fillColor: '#FF0000',
+                                    fillOpacity: 0.35,
+                                    map: map,
+                                    editable: false,
+                                    draggable: false,
+                                    bounds: new google.maps.LatLngBounds(
+                                            new google.maps.LatLng(SWpoint.get('latitude'), SWpoint.get('longitude')),
+                                            new google.maps.LatLng(NEpoint.get('latitude'), NEpoint.get('longitude')))
+
+                                })
+                            }
+                        }
 
 					    // Add an event listener on the rectangle.
   						google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
@@ -87,9 +171,16 @@
 				var ne = rectangle.getBounds().getNorthEast();
 				var sw = rectangle.getBounds().getSouthWest();
 
-				var contentString = '<b>New Red Zone.</b><br>';// +
-				//    'New north-east corner: ' + ne.lat() + ', ' + ne.lng() + '<br>' +
-				//    'New south-west corner: ' + sw.lat() + ', ' + sw.lng();
+				// Update red zone if changed.
+				RZ_SW_LAT = sw.lat();
+				RZ_SW_LNG = sw.lng();
+				RZ_NE_LAT = ne.lat();
+				RZ_NE_LNG = ne.lng();
+
+				var contentString = '<b>New Red Zone.</b><br>'; /*+
+				    'New north-east corner: ' + RZ_NE_LAT + ', ' + RZ_NE_LNG + '<br>' +
+				    'New south-west corner: ' + RZ_SW_LAT + ', ' + RZ_SW_LNG;*/
+
 
 				// Set the info window's content and position.
 				infoWindow.setContent(contentString);
@@ -97,72 +188,100 @@
 
 				infoWindow.open(map);
 			}
-			
+     		google.maps.event.addDomListener(window, 'load', initialize);
+
+            var LowerLeft = Parse.Object.extend("LowerLeft");
+            var UpperRight = Parse.Object.extend("UpperRight");
+
 	function submitform() {
-		var UpperRight = Parse.Object.extend("UpperRight");
 		var upperRight = new UpperRight();
-	
-		var LowerLeft = Parse.Object.extend("LowerLeft");
 		var lowerLeft = new LowerLeft();
  
-		var point1 = new Parse.GeoPoint({latitude: 41.258953, longitude: -95.93531469});
-		var point2 = new Parse.GeoPoint({latitude: 41.259953, longitude: -95.93631469});
+		var pointRight = new Parse.GeoPoint({latitude: RZ_NE_LAT, longitude:RZ_NE_LNG });
+		var pointLeft = new Parse.GeoPoint({latitude:RZ_SW_LAT , longitude:RZ_NE_LNG });
  
-		upperRight.set("name", 1);
-		upperRight.set("point", point1);
+		upperRight.set("name", red_zone_num);
+		upperRight.set("point", pointRight);
 	
-		lowerLeft.set("name",1);
-		lowerLeft.set("point", point2);
+		lowerLeft.set("name",red_zone_num);
+		lowerLeft.set("point", pointLeft);
  
 		upperRight.save(null, {
-		success: function(upperRight) {
-		// Execute any logic that should take place after the object is saved.
-		alert('New object created with objectId: ' + upperRight.id);
-		},
-		error: function(upperRight, error) {
-		// Execute any logic that should take place if the save fails.
-		// error is a Parse.Error with an error code and description.
-		alert('Failed to create new object, with error code: ' + error.message);
-  }
-});
-
-	lowerLeft.save(null, {
-	success: function(lowerLeft) {
-    // Execute any logic that should take place after the object is saved.
-    alert('New object created with objectId: ' + lowerLeft.id);
-	},
-	error: function(lowerLeft, error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and description.
-    alert('Failed to create new object, with error code: ' + error.message);
-  }
-});
+			success: function(upperRight) {
+				// Execute any logic that should take place after the object is saved.
+				alert('New object created with objectId: ' + upperRight.id);
+			},
+			error: function(upperRight, error) {
+			// Execute any logic that should take place if the save fails.
+			// error is a Parse.Error with an error code and description.
+			alert('Failed to create new object, with error code: ' + error.message);
 			}
-			
-     		google.maps.event.addDomListener(window, 'load', initialize);
-			
-			<!-- This stuff is here to make Parse work -->
-			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
-			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js">
-			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
-			<!-- End Parse stuff -->
-    		</script>
+		});
+		lowerLeft.save(null, {
+			success: function(lowerLeft) {
+				// Execute any logic that should take place after the object is saved.
+				alert('New object created with objectId: ' + lowerLeft.id);
+
+			},
+			error: function(lowerLeft, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and description.
+			alert('Failed to create new object, with error code: ' + error.message);
+  			}
+		});
+        var query = new Parse.Query(RedZoneNum);
+        query.equalTo("name", "indice");
+        query.find({
+            success: function(results) {
+                for (var i = 0; i < results.length; i++) {
+                    var object = results[i];
+                    object.increment('index');
+                    object.save();
+                    alert(object.get('index') + ' is the current index');
+                    red_zone_num = object.get('index');
+                }
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+	};
+
+    		function detectBrowser() {
+  				var useragent = navigator.userAgent;
+  				var mapdiv = document.getElementById("map-canvas");
+
+  				if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
+  					window.alert('mobile?')
+    				mapdiv.style.width = '100%';
+    				mapdiv.style.height = '100%';
+  				} else {
+  					window.alert('regular browser')
+    				mapdiv.style.width = '600px';
+    				mapdiv.style.height = '800px';
+  				}
+			}
+
+			</script>
 		</div>
 	</head>
 	<body>
 		<table width="100%" height="100%">
-			<tr height="100%">
-				<td width="75%">
-					<div id="map-canvas"/>
-				</td>
-				<td width = "75%">
+			<tr width="100%">
+				<td height="10%">
 					<div>
+						<h2>No Breaks on the Safety Train</h2>
 						<form>
-							User ID: <input type="text" name="user_id"><br>
-							RedZone Name: <input type="text" name="redzone_name"><br>
-							<input type="button" onClick="submitform()" value="Submit">
+							User ID: <input type="text" name="user_id">
+							&nbsp;&nbsp;&nbsp;RedZone Name: <input type="text" name="redzone_name">
+							&nbsp;&nbsp;&nbsp;<input type="button" onClick="submitform()" value="Create New Redzone">
 						</form>
 					</div>
+				</td>
+			</tr>
+			<tr width="100%">
+				<td height="90%">
+					<div id="map-canvas"/>
 				</td>
 			</tr>
 		</table>
