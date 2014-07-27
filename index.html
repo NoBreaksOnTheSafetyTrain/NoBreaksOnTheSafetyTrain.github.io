@@ -91,8 +91,8 @@
 
                         var NEquery = new Parse.Query(UpperRight);
                         var SWquery = new Parse.Query(LowerLeft);
-                        var NEpoint;
-                        var SWpoint;
+                        Parse.GeoPoint NEpoint;
+                        Parse.GeoPoint SWpoint;
                         for(var i=0; i<red_zone_num; i++)
                         {
                             NEquery.equalTo("name", i);
