@@ -172,7 +172,6 @@
                         success: function(results) {
                             alert(results.length + " is the number of results that were returned");
                             for(var j = 0; j <results.length; j++) {
-                                alert(results);
                                 if(results[i]!=null)
                                     NEpoint = results[i];
                             }
@@ -207,8 +206,8 @@
                         editable: false,
                         draggable: false,
                         bounds: new google.maps.LatLngBounds(
-                                new google.maps.LatLng(SWpoint.latitude, SWpoint.longitude),
-                                new google.maps.LatLng(NEpoint.latitude, NEpoint.longitude))
+                                new google.maps.LatLng(SWpoint.getLatitude(), SWpoint.getLongitude()),
+                                new google.maps.LatLng(NEpoint.getLatitude(), NEpoint.getLongitude()))
 
                     })
                 }
