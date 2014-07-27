@@ -15,6 +15,8 @@
    		 	var rectangle;
    		 	var map;
    		 	var infoWindow;
+   		 	var RZ_SW;
+   		 	var RZ_NE;
     		function initialize() {
 				var mapOptions = {
    					zoom: 16
@@ -35,6 +37,8 @@
 					    });
 					    var myLat = pos.lat();
 					    var myLng = pos.lng();
+					    window.alert(myLat);
+					    window.alert(myLng);
 					    map.setCenter(pos);
 
 					    rectangle = new google.maps.Rectangle({
