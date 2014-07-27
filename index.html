@@ -157,6 +157,7 @@
                     NEquery.equalTo("name", i);
                     NEquery.find({
                         success: function(results) {
+                            alert(results.length + " is the number of results that were returned");
                             for(var j = 0; j <results.length; j++) {
                                 alert(results);
                                 if(results[i]!=null)
