@@ -142,9 +142,12 @@
 				infoWindow.open(map);
 			}
      		google.maps.event.addDomListener(window, 'load', initialize);
+            google.maps.event.addDomListener(window, 'load', loadOldZones);
 
             var LowerLeft = Parse.Object.extend("LowerLeft");
             var UpperRight = Parse.Object.extend("UpperRight");
+
+            function loadOldZones() {
             var NEquery = new Parse.Query(UpperRight);
             var SWquery = new Parse.Query(LowerLeft);
             var NEpoint;
@@ -190,7 +193,8 @@
                     })
                 }
             }
-			
+         };
+
 	function submitform() {
 		var upperRight = new UpperRight();
 		var lowerLeft = new LowerLeft();
