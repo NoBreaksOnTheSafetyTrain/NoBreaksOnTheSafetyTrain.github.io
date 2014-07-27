@@ -142,27 +142,28 @@
 		lowerLeft.set("point", pointLeft);
  
 		upperRight.save(null, {
-		success: function(upperRight) {
-		// Execute any logic that should take place after the object is saved.
-		alert('New object created with objectId: ' + upperRight.id);
-		},
+			success: function(upperRight) {
+			// Execute any logic that should take place after the object is saved.
+			alert('New object created with objectId: ' + upperRight.id);
+			},
 		error: function(upperRight, error) {
 		// Execute any logic that should take place if the save fails.
 		// error is a Parse.Error with an error code and description.
 		alert('Failed to create new object, with error code: ' + error.message);
 		};
+		});
 		lowerLeft.save(null, {
-		success: function(lowerLeft) {
+			success: function(lowerLeft) {
 		// Execute any logic that should take place after the object is saved.
 		alert('New object created with objectId: ' + lowerLeft.id);
 		},
 		error: function(lowerLeft, error) {
-		// Execute any logic that should take place if the save fails.
-		// error is a Parse.Error with an error code and description.
+			// Execute any logic that should take place if the save fails.
+			// error is a Parse.Error with an error code and description.
 		alert('Failed to create new object, with error code: ' + error.message);
-  }
-});
-};
+  		}
+		});
+	};
 
     		</script>
 		</div>
