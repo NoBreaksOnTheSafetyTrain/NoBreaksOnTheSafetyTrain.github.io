@@ -117,7 +117,9 @@
                                     alert("Error: " + error.code + " " + error.message);
                                 }
                             });
+                                alert("The code got to the if statement");
                             if(SWpoint!=null && NEpoint!=null) {
+                                alert("inside the if statement");
                                 var zone = new google.maps.Rectangle({
                                     strokeColor: '#FF0000',
                                     strokeOpacity: 0.8,
