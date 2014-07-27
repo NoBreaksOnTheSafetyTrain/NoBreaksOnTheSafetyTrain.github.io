@@ -99,7 +99,7 @@
                             NEquery.find({
                                 success: function(results) {
                                     for(var j = 0; j <results.length; j++) {
-                                        if(NEpoint!=null)
+                                        if(results[i]!=null)
                                         NEpoint = results[i];
                                     }
                                 },
@@ -111,7 +111,7 @@
                             SWquery.find({
                                 success: function(results) {
                                     for(var j = 0; j <results.length; j++) {
-                                        if(SWpoint!=null)
+                                        if(results[i]!=null)
                                             SWpoint = results[i];
                                     }
                                 },
