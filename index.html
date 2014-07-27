@@ -11,6 +11,13 @@
    		 <script type="text/javascript"
      		 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnpJr_aysMrCbFnyjiLBHLE1bICfjr3KM">
     		</script>
+			<!-- This stuff is here to make Parse work -->
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+			<script>
+			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
+			</script>
+			<!-- End Parse stuff -->
    		 <script type="text/javascript">
    		 	var rectangle;
    		 	var map;
@@ -117,12 +124,6 @@
 				infoWindow.open(map);
 			}
      		google.maps.event.addDomListener(window, 'load', initialize);
-			
-			<!-- This stuff is here to make Parse work -->
-			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
-			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js">
-			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
-			<!-- End Parse stuff -->
 			
 	function submitform() {
 		var UpperRight = Parse.Object.extend("UpperRight");
