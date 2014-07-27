@@ -36,8 +36,8 @@
                 success: function(results) {
                     for (var i = 0; i < results.length; i++) {
                         var object = results[i];
-                        alert(object.index + ' is the current index');
-                        red_zone_num = object.index;
+                        alert(object.get('index') + ' is the current index');
+                        red_zone_num = object.get('index');
                     }
                 },
                 error: function(error) {
