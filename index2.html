@@ -209,7 +209,7 @@
 		upperRight.save(null, {
 			success: function(upperRight) {
 				// Execute any logic that should take place after the object is saved.
-				alert('New object created with objectId: ' + upperRight.id);
+				alert('Redzone Created --> 1/2');
 			},
 			error: function(upperRight, error) {
 			// Execute any logic that should take place if the save fails.
@@ -220,7 +220,7 @@
 		lowerLeft.save(null, {
 			success: function(lowerLeft) {
 				// Execute any logic that should take place after the object is saved.
-				alert('New object created with objectId: ' + lowerLeft.id);
+				alert('Redzone Created --> 2/2');
 
 			},
 			error: function(lowerLeft, error) {
@@ -237,7 +237,6 @@
                     var object = results[i];
                     object.increment('index');
                     object.save();
-                    alert(object.get('index') + ' is the current index');
                     red_zone_num = object.get('index');
                 }
             },
