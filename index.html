@@ -130,8 +130,8 @@
                                     editable: false,
                                     draggable: false,
                                     bounds: new google.maps.LatLngBounds(
-                                            new google.maps.LatLng(SWpoint.get('latitude'), SWpoint.get('longitude')),
-                                            new google.maps.LatLng(NEpoint.get('latitude'), NEpoint.get('longitude')))
+                                            new google.maps.LatLng(SWpoint.geolocation.latitude, SWpoint.geolocation.longitude),
+                                            new google.maps.LatLng(NEpoint.geolocation.latitude, NEpoint.geolocation.longitude))
 
                                 })
                             }
