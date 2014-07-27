@@ -15,7 +15,6 @@
 			<!-- This stuff is here to make Parse work -->
 			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
-            <!-- TODO Get counter from the database, increment it and then use it in place of name-->
 			<script>
 			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
 			</script>
@@ -28,7 +27,25 @@
    		 	var RZ_SW_LNG;
    		 	var RZ_NE_LAT;
    		 	var RZ_NE_LNG;
-    		function initialize() {
+            var red_zone_num;
+
+            var RedZoneNum = Parse.Object.extend("RedZoneNum");
+            var query = new Parse.Query(RedZoneNum);
+            query.equalTo("name", "indice");
+            query.find({
+                success: function(results) {
+                    for (var i = 0; i < results.length; i++) {
+                        var object = results[i];
+                        alert(object.index + ' is the current index');
+                        red_zone_num = object.index;
+                    }
+                },
+                error: function(error) {
+                    alert("Error: " + error.code + " " + error.message);
+                }
+            });
+
+            function initialize() {
 				var mapOptions = {
    					zoom: 16
   				};
@@ -137,10 +154,10 @@
 		var pointRight = new Parse.GeoPoint({latitude: RZ_NE_LAT, longitude:RZ_NE_LNG });
 		var pointLeft = new Parse.GeoPoint({latitude:RZ_SW_LAT , longitude:RZ_NE_LNG });
  
-		upperRight.set("name", 1);
+		upperRight.set("name", red_zone_num);
 		upperRight.set("point", pointRight);
 	
-		lowerLeft.set("name",1);
+		lowerLeft.set("name",red_zone_num);
 		lowerLeft.set("point", pointLeft);
  
 		upperRight.save(null, {
@@ -158,6 +175,7 @@
 			success: function(lowerLeft) {
 				// Execute any logic that should take place after the object is saved.
 				alert('New object created with objectId: ' + lowerLeft.id);
+
 			},
 			error: function(lowerLeft, error) {
 				// Execute any logic that should take place if the save fails.
@@ -165,6 +183,22 @@
 			alert('Failed to create new object, with error code: ' + error.message);
   			}
 		});
+        var query = new Parse.Query(RedZoneNum);
+        query.equalTo("name", "indice");
+        query.find({
+            success: function(results) {
+                for (var i = 0; i < results.length; i++) {
+                    var object = results[i];
+                    object.index+=1;
+                    object.save();
+                    alert(object.index + ' is the current index');
+                    red_zone_num = object.index;
+                }
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
 	};
 
     		function detectBrowser() {
@@ -181,10 +215,11 @@
     				mapdiv.style.height = '800px';
   				}
 			}
+
 			</script>
 		</div>
 	</head>
-	<body>
+	<body onload="detectBrowser()">
 		<table width="100%" height="100%">
 			<tr height="10%">
 				<div>
