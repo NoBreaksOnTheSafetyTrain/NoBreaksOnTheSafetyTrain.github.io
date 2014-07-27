@@ -46,7 +46,7 @@
 							draggable: true,
 							bounds: new google.maps.LatLngBounds(
 								new google.maps.LatLng(myLat, myLng),
-								new google.maps.LatLng(myLat+.01, myLng+.01))
+								new google.maps.LatLng(myLat+.0025, myLng+.0025))
 					    })
 
 					    // Add an event listener on the rectangle.
@@ -80,6 +80,7 @@
 			  	map.setCenter(options.position);
 			}
 
+			/** @this {google.maps.Rectangle} */
 			function showNewRect(event) {
 				var ne = rectangle.getBounds().getNorthEast();
 				var sw = rectangle.getBounds().getSouthWest();
