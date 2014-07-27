@@ -151,7 +151,7 @@
             var SWpoint;
             for(var i=0; i<RedZoneNum; i++)
             {
-                NEquery.equalTo("indice", i);
+                NEquery.equalTo("name", i);
                 NEquery.find({
                     success: function(results) {
                         for(var j = 0; j <results.length; j++) {
@@ -162,7 +162,7 @@
                         alert("Error: " + error.code + " " + error.message);
                     }
                 });
-                SWquery.equalTo("indice", i);
+                SWquery.equalTo("name", i);
                 SWquery.find({
                     success: function(results) {
                         for(var j = 0; j <results.length; j++) {
