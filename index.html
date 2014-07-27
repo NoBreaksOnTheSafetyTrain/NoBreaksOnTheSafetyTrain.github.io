@@ -14,6 +14,7 @@
 			<!-- This stuff is here to make Parse work -->
 			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+            <!-- TODO Get counter from the database, increment it and then use it in place of name-->
 			<script>
 			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
 			</script>
@@ -165,7 +166,21 @@
 		});
 	};
 
-    		</script>
+    		function detectBrowser() {
+  				var useragent = navigator.userAgent;
+  				var mapdiv = document.getElementById("map-canvas");
+
+  				if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
+  					window.alert('mobile?')
+    				mapdiv.style.width = '100%';
+    				mapdiv.style.height = '100%';
+  				} else {
+  					window.alert('regular browser')
+    				mapdiv.style.width = '600px';
+    				mapdiv.style.height = '800px';
+  				}
+			}
+			</script>
 		</div>
 	</head>
 	<body>
