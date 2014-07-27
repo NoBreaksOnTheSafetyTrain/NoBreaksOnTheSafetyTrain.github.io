@@ -97,7 +97,55 @@
 
 				infoWindow.open(map);
 			}
+			
+	function submitform() {
+		var UpperRight = Parse.Object.extend("UpperRight");
+		var upperRight = new UpperRight();
+	
+		var LowerLeft = Parse.Object.extend("LowerLeft");
+		var lowerLeft = new LowerLeft();
+ 
+		var point1 = new Parse.GeoPoint({latitude: 41.258953, longitude: -95.93531469});
+		var point2 = new Parse.GeoPoint({latitude: 41.259953, longitude: -95.93631469});
+ 
+		upperRight.set("name", 1);
+		upperRight.set("point", point1);
+	
+		lowerLeft.set("name",1);
+		lowerLeft.set("point", point2);
+ 
+		upperRight.save(null, {
+		success: function(upperRight) {
+		// Execute any logic that should take place after the object is saved.
+		alert('New object created with objectId: ' + upperRight.id);
+		},
+		error: function(upperRight, error) {
+		// Execute any logic that should take place if the save fails.
+		// error is a Parse.Error with an error code and description.
+		alert('Failed to create new object, with error code: ' + error.message);
+  }
+});
+
+	lowerLeft.save(null, {
+	success: function(lowerLeft) {
+    // Execute any logic that should take place after the object is saved.
+    alert('New object created with objectId: ' + lowerLeft.id);
+	},
+	error: function(lowerLeft, error) {
+    // Execute any logic that should take place if the save fails.
+    // error is a Parse.Error with an error code and description.
+    alert('Failed to create new object, with error code: ' + error.message);
+  }
+});
+			}
+			
      		google.maps.event.addDomListener(window, 'load', initialize);
+			
+			<!-- This stuff is here to make Parse work -->
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+			<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js">
+			Parse.initialize("yJAvaIQrJFrME81fNepQTcr00hmrLSuO8PqVzKKR", "xEvNWV4kcxnIQPfn2PGyUkC02BP042sCy5YzOR0D");
+			<!-- End Parse stuff -->
     		</script>
 		</div>
 	</head>
