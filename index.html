@@ -89,6 +89,19 @@
 								new google.maps.LatLng(RZ_NE_LAT, RZ_NE_LNG))
 					    })
 
+						rectangle2 = new google.maps.Rectangle({
+							strokeColor: '#FF0000',
+							strokeOpacity: 0.8,
+							strokeWeight: 2,
+							fillColor: '#FF0000',
+							fillOpacity: 0.35,
+							map: map,
+							editable: true,
+							draggable: true,
+							bounds: new google.maps.LatLngBounds(
+								new google.maps.LatLng(RZ_SW_LAT-.000001, RZ_SW_LNG-.000001),
+								new google.maps.LatLng(RZ_NE_LAT+.0025, RZ_NE_LNG-.0025))
+					    })
 					    // Add an event listener on the rectangle.
   						google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
 
