@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<div>
+   		 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+   		 <style type="text/css">
+    		  html { height: 100% }
+    		  body { height: 100%; margin: 0; padding: 0 }
+    		  #map-canvas { height: 100% }
+   		 </style>
+   		 <script type="text/javascript"
+     		 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnpJr_aysMrCbFnyjiLBHLE1bICfjr3KM">
+    		</script>
+   		 <script type="text/javascript">
+   		 	var rectangle;
+   		 	var map;
+   		 	var infoWindow;
+   		 	var RZ_SW_LAT;
+   		 	var RZ_SW_LNG;
+   		 	var RZ_NE_LAT;
+   		 	var RZ_NE_LNG;
+    		function initialize() {
+				var mapOptions = {
+   					zoom: 16
+  				};
+  				map = new google.maps.Map(document.getElementById('map-canvas'),
+      				mapOptions);
+
+				// Try HTML5 geolocation
+				if(navigator.geolocation) {
+				    navigator.geolocation.getCurrentPosition(function(position) {
+					    var pos = new google.maps.LatLng(position.coords.latitude,
+					    	position.coords.longitude);
+
+					    var infowindow = new google.maps.InfoWindow({
+					        map: map,
+					        position: pos,
+					        content: 'Here you are.'
+					    });
+					    var myLat = pos.lat();
+					    var myLng = pos.lng();
+					    map.setCenter(pos);
+
+					    // Define offsets.
+					    var Lat_Off = .000078125;
+					    var Lng_Off = .00125;
+					    RZ_SW_LAT = myLat-Lat_Off;
+					    RZ_SW_LNG = myLng-Lng_Off;
+					    RZ_NE_LAT = myLat+Lat_Off;
+					    RZ_NE_LNG = myLng+Lng_Off;
+
+					    rectangle = new google.maps.Rectangle({
+							strokeColor: '#FF0000',
+							strokeOpacity: 0.8,
+							strokeWeight: 2,
+							fillColor: '#FF0000',
+							fillOpacity: 0.35,
+							map: map,
+							editable: true,
+							draggable: true,
+							bounds: new google.maps.LatLngBounds(
+								new google.maps.LatLng(RZ_SW_LAT, RZ_SW_LNG),
+								new google.maps.LatLng(RZ_NE_LAT, RZ_NE_LNG))
+					    })
+
+					    // Add an event listener on the rectangle.
+  						google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
+
+  						// Define an info window on the map.
+  						infoWindow = new google.maps.InfoWindow(); 
+					}, function() {
+					    	handleNoGeolocation(true);
+				    });
+				} else {
+				    // Browser doesn't support Geolocation
+				    handleNoGeolocation(false);
+				}
+			}
+
+			function handleNoGeolocation(errorFlag) {
+				if (errorFlag) {
+			    	var content = 'Error: The Geolocation service failed.';
+			    } else {
+			        var content = 'Error: Your browser doesn\'t support geolocation.';
+			  	}
+
+			  	var options = {
+			    	map: map,
+			    	position: new google.maps.LatLng(60, 105),
+			    	content: content
+			  	};
+
+			  	var infowindow = new google.maps.InfoWindow(options);
+			  	map.setCenter(options.position);
+			}
+
+			/** @this {google.maps.Rectangle} */
+			function showNewRect(event) {
+				var ne = rectangle.getBounds().getNorthEast();
+				var sw = rectangle.getBounds().getSouthWest();
+
+				// Update red zone if changed.
+				RZ_SW_LAT = sw.lat();
+				RZ_SW_LNG = sw.lng();
+				RZ_NE_LAT = ne.lat();
+				RZ_NE_LNG = ne.lng();
+
+				var contentString = '<b>New Red Zone.</b><br>' +
+				    'New north-east corner: ' + RZ_NE_LAT + ', ' + RZ_NE_LNG + '<br>' +
+				    'New south-west corner: ' + RZ_SW_LAT + ', ' + RZ_SW_LNG;
+
+
+				// Set the info window's content and position.
+				infoWindow.setContent(contentString);
+				infoWindow.setPosition(ne);
+
+				infoWindow.open(map);
+			}
+     		google.maps.event.addDomListener(window, 'load', initialize);
+    		</script>
+		</div>
+	</head>
+	<body>
+		<table width="100%" height="100%">
+			<tr height="100%">
+				<td width="75%">
+					<div id="map-canvas"/>
+				</td>
+				<td width = "75%">
+					<div>
+						<form>
+							User ID: <input type="text" name="user_id"><br>
+							RedZone Name: <input type="text" name="redzone_name"><br>
+						</form>
+					</div>
+				</td>
+			</tr>
+		</table>
+  	</body>
+</html>
