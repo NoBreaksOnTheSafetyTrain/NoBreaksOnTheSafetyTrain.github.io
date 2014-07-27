@@ -89,57 +89,7 @@
 								new google.maps.LatLng(RZ_NE_LAT, RZ_NE_LNG))
 					    })
 
-                        var NEquery = new Parse.Query(UpperRight);
-                        var SWquery = new Parse.Query(LowerLeft);
-                        var NEpoint;
-                        var SWpoint;
-                        for(var i=0; i<red_zone_num; i++)
-                        {
-                            NEquery.equalTo("name", i);
-                            NEquery.find({
-                                success: function(results) {
-                                    for(var j = 0; j <results.length; j++) {
-                                    	alert(results);
-                                        if(results[i]!=null)
-                                        NEpoint = results[i];
-                                    }
-                                },
-                                error: function(error) {
-                                    alert("Error: " + error.code + " " + error.message);
-                                }
-                            });
-                            SWquery.equalTo("name", i);
-                            SWquery.find({
-                                success: function(results) {
-                                    for(var j = 0; j <results.length; j++) {
-                                        if(results[i]!=null)
-                                            SWpoint = results[i];
-                                    }
-                                },
-                                error: function(error) {
-                                    alert("Error: " + error.code + " " + error.message);
-                                }
-                            });
-                                alert("The code got to the if statement");
-                            //if(SWpoint!=null && NEpoint!=null) {
-                                alert("inside the if statement");
-                                alert(SWpoint);
-                                var zone = new google.maps.Rectangle({
-                                    strokeColor: '#FF0000',
-                                    strokeOpacity: 0.8,
-                                    strokeWeight: 2,
-                                    fillColor: '#FF0000',
-                                    fillOpacity: 0.35,
-                                    map: map,
-                                    editable: false,
-                                    draggable: false,
-                                    bounds: new google.maps.LatLngBounds(
-                                            new google.maps.LatLng(SWpoint.latitude, SWpoint.longitude),
-                                            new google.maps.LatLng(NEpoint.latitude, NEpoint.longitude))
-
-                                })
-                            //}
-                        }
+                        },
 
 					    // Add an event listener on the rectangle.
   						google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
@@ -199,6 +149,58 @@
             var LowerLeft = Parse.Object.extend("LowerLeft");
             var UpperRight = Parse.Object.extend("UpperRight");
 
+            function showOldRects() {
+                var NEquery = new Parse.Query(UpperRight);
+                var SWquery = new Parse.Query(LowerLeft);
+                var NEpoint = new Parse.GeoPoint();
+                var SWpoint = new Parse.GeoPoint();
+                for(var i=0; i<red_zone_num; i++)
+                {
+                    NEquery.equalTo("name", i);
+                    NEquery.find({
+                        success: function(results) {
+                            for(var j = 0; j <results.length; j++) {
+                                alert(results);
+                                if(results[i]!=null)
+                                    NEpoint = results[i];
+                            }
+                        },
+                        error: function(error) {
+                            alert("Error: " + error.code + " " + error.message);
+                        }
+                    });
+                    SWquery.equalTo("name", i);
+                    SWquery.find({
+                        success: function(results) {
+                            for(var j = 0; j <results.length; j++) {
+                                if(results[i]!=null)
+                                    SWpoint = results[i];
+                            }
+                        },
+                        error: function(error) {
+                            alert("Error: " + error.code + " " + error.message);
+                        }
+                    });
+                    alert("The code got to the if statement");
+                    //if(SWpoint!=null && NEpoint!=null) {
+                    alert("inside the if statement");
+                    alert(SWpoint);
+                    var zone = new google.maps.Rectangle({
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: '#FF0000',
+                        fillOpacity: 0.35,
+                        map: map,
+                        editable: false,
+                        draggable: false,
+                        bounds: new google.maps.LatLngBounds(
+                                new google.maps.LatLng(SWpoint.latitude, SWpoint.longitude),
+                                new google.maps.LatLng(NEpoint.latitude, NEpoint.longitude))
+
+                    })
+            }
+
 	function submitform() {
 		var upperRight = new UpperRight();
 		var lowerLeft = new LowerLeft();
@@ -251,6 +253,8 @@
                 alert("Error: " + error.code + " " + error.message);
             }
         });
+
+        showOldRects();
 	};
 
     		function detectBrowser() {
