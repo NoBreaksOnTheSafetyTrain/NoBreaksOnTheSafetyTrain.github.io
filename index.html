@@ -15,8 +15,10 @@
    		 	var rectangle;
    		 	var map;
    		 	var infoWindow;
-   		 	var RZ_SW;
-   		 	var RZ_NE;
+   		 	var RZ_SW_LAT;
+   		 	var RZ_SW_LNG;
+   		 	var RZ_NE_LAT;
+   		 	var RZ_NE_LNG;
     		function initialize() {
 				var mapOptions = {
    					zoom: 16
@@ -37,9 +39,15 @@
 					    });
 					    var myLat = pos.lat();
 					    var myLng = pos.lng();
-					    window.alert(myLat);
-					    window.alert(myLng);
 					    map.setCenter(pos);
+
+					    // Define offsets.
+					    var Lat_Off = .000078125;
+					    var Lng_Off = .00125;
+					    RZ_SW_LAT = myLat-Lat_Off;
+					    RZ_SW_LNG = myLng-Lng_Off;
+					    RZ_NE_LAT = myLat+Lat_Off;
+					    RZ_NE_LNG = myLng+Lng_Off;
 
 					    rectangle = new google.maps.Rectangle({
 							strokeColor: '#FF0000',
@@ -51,8 +59,8 @@
 							editable: true,
 							draggable: true,
 							bounds: new google.maps.LatLngBounds(
-								new google.maps.LatLng(myLat-.000078125, myLng-.00125),
-								new google.maps.LatLng(myLat+.000078125, myLng+.00125))
+								new google.maps.LatLng(RZ_SW_LAT, RZ_SW_LNG),
+								new google.maps.LatLng(RZ_NE_LAT, RZ_NE_LNG))
 					    })
 
 					    // Add an event listener on the rectangle.
@@ -94,6 +102,9 @@
 				var contentString = '<b>New Red Zone.</b><br>';// +
 				//    'New north-east corner: ' + ne.lat() + ', ' + ne.lng() + '<br>' +
 				//    'New south-west corner: ' + sw.lat() + ', ' + sw.lng();
+
+				// Update red zone if changed.
+
 
 				// Set the info window's content and position.
 				infoWindow.setContent(contentString);
